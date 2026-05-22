@@ -11,10 +11,7 @@
 
 # --- Redirections ---
 # Les playlists privées : /p/casting-renault → /playlist.html?slug=casting-renault
-[[redirects]]
-  from = "/p/*"
-  to = "/playlist.html?slug=:splat"
-  status = 200
+
 
 # --- En-têtes de sécurité ---
 [[headers]]
