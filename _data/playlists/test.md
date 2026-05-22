@@ -1,6 +1,6 @@
 ---
 title: test
-slug: testcasting
+slug: test
 extracts:
   - bb-bleu-chanel
   - kinder-noel
