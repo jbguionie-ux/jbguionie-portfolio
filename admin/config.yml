@@ -1,0 +1,131 @@
+# =====================================================================
+# Configuration Decap CMS
+# Documentation : https://decapcms.org/docs/
+# =====================================================================
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Dossier où Decap stocke les fichiers média (audio, images)
+media_folder: "assets/media"
+public_folder: "/assets/media"
+
+# Locale FR pour l'interface
+locale: 'fr'
+
+# Logo et identité du back-office
+site_url: https://jbguionie.fr
+display_url: https://jbguionie.fr
+logo_url: https://jbguionie.fr/assets/images/admin-logo.svg
+
+# =====================================================================
+# COLLECTIONS
+# =====================================================================
+collections:
+
+  # -------------------------------------------------------------------
+  # 1) EXTRAITS AUDIO
+  # -------------------------------------------------------------------
+  - name: "extracts"
+    label: "Extraits audio"
+    label_singular: "Extrait"
+    folder: "_data/extracts"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{client}} ({{year}})"
+    sortable_fields: ['order', 'date', 'title']
+    view_groups:
+      - label: Type
+        field: type
+      - label: Secteur
+        field: secteur
+    fields:
+      - { label: "Titre", name: "title", widget: "string", hint: "Titre court de l'extrait. Utilisez des * pour mettre en italique : Tucson — *« Nouvelle génération »*" }
+      - { label: "Slug (identifiant URL)", name: "slug", widget: "string", hint: "Identifiant unique. Lettres minuscules et tirets uniquement (ex: tucson-nouvelle-generation)" }
+      - { label: "Client / Marque", name: "client", widget: "string", required: false }
+      - { label: "Support", name: "support", widget: "select", options: ["Spot TV", "Spot Radio", "Billboard TV", "Web", "Documentaire", "E-learning", "Animation", "Jeu vidéo", "Livre audio", "Autre"], required: false }
+      - { label: "Année", name: "year", widget: "string", required: false, default: "2026" }
+      - { label: "Date", name: "date", widget: "datetime", required: false, hint: "Sert au tri si l'ordre manuel n'est pas défini" }
+      - label: "Type"
+        name: "type"
+        widget: "select"
+        options:
+          - { label: "Publicité", value: "publicité" }
+          - { label: "Radio", value: "radio" }
+          - { label: "Billboard", value: "billboard" }
+          - { label: "Instit", value: "instit" }
+          - { label: "Doublage", value: "doublage" }
+          - { label: "Livre Audio", value: "livre-audio" }
+      - label: "Secteur"
+        name: "secteur"
+        widget: "select"
+        options:
+          - { label: "Food", value: "food" }
+          - { label: "Car", value: "car" }
+          - { label: "Tech", value: "tech" }
+          - { label: "Luxe", value: "luxe" }
+          - { label: "LifeStyle", value: "lifestyle" }
+          - { label: "Cartoon", value: "cartoon" }
+      - { label: "Fichier audio (MP3)", name: "audio_file", widget: "file", media_library: { config: { multiple: false } }, hint: "Glissez-déposez votre fichier MP3 ici" }
+      - { label: "Durée (mm:ss)", name: "duration", widget: "string", required: false, hint: "Ex: 0:32" }
+      - { label: "Image de couverture (optionnel)", name: "cover", widget: "image", required: false, hint: "Sera utilisée plus tard si vous souhaitez illustrer l'extrait" }
+      - { label: "Description (optionnel)", name: "description", widget: "text", required: false }
+      - { label: "Ordre d'affichage", name: "order", widget: "number", required: false, hint: "Optionnel. Si vide, les extraits sont triés par date" }
+      - { label: "Mettre en avant", name: "featured", widget: "boolean", default: false, required: false }
+
+  # -------------------------------------------------------------------
+  # 2) FILMS
+  # -------------------------------------------------------------------
+  - name: "films"
+    label: "Films"
+    label_singular: "Film"
+    folder: "_data/films"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{client}} ({{year}})"
+    sortable_fields: ['order', 'year', 'title']
+    fields:
+      - { label: "Titre", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Lien YouTube", name: "youtube_url", widget: "string", hint: "Coller l'URL complète : https://www.youtube.com/watch?v=..." }
+      - { label: "Client / Marque", name: "client", widget: "string", required: false }
+      - { label: "Année", name: "year", widget: "string", required: false }
+      - { label: "Durée (mm:ss)", name: "duration", widget: "string", required: false }
+      - { label: "Image personnalisée (optionnel)", name: "cover", widget: "image", required: false, hint: "Si non fournie, la miniature YouTube sera utilisée automatiquement" }
+      - { label: "Ordre d'affichage", name: "order", widget: "number", required: false }
+
+  # -------------------------------------------------------------------
+  # 3) PLAYLISTS PRIVÉES
+  # -------------------------------------------------------------------
+  - name: "playlists"
+    label: "Playlists privées"
+    label_singular: "Playlist"
+    folder: "_data/playlists"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{extracts.length}} extraits"
+    fields:
+      - { label: "Titre de la sélection", name: "title", widget: "string", hint: "Ex: Casting Renault — Voix père de famille" }
+      - { label: "Slug (apparaît dans l'URL)", name: "slug", widget: "string", hint: "Lettres minuscules et tirets uniquement. L'URL sera : jbguionie.fr/p/votre-slug" }
+      - { label: "Message d'accueil (optionnel)", name: "message", widget: "text", required: false, hint: "Court message personnalisé pour le destinataire" }
+      - label: "Extraits inclus"
+        name: "extracts"
+        widget: "relation"
+        collection: "extracts"
+        search_fields: ["title", "client"]
+        value_field: "slug"
+        display_fields: ["title", "client"]
+        multiple: true
+        hint: "Sélectionnez les extraits à inclure (et leur ordre)"
+      - { label: "Date de création", name: "created_date", widget: "datetime", default: "", required: false }
+      - { label: "Date d'expiration (optionnel)", name: "expiry_date", widget: "datetime", required: false, hint: "Au-delà de cette date, le lien ne sera plus accessible. Laisser vide pour un lien permanent." }

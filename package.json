@@ -1,0 +1,9 @@
+{
+  "name": "jbguionie-portfolio",
+  "version": "1.0.0",
+  "description": "Site portfolio de Jean-Baptiste Guionie, comédien voix off",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  }
+}

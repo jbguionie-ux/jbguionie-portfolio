@@ -1,0 +1,31 @@
+# =====================================================================
+# Configuration Netlify
+# =====================================================================
+
+[build]
+  command = "npm run build"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# --- Redirections ---
+# Les playlists privées : /p/casting-renault → /playlist.html?slug=casting-renault
+[[redirects]]
+  from = "/p/*"
+  to = "/playlist.html?slug=:splat"
+  status = 200
+
+# --- En-têtes de sécurité ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Pas d'indexation pour les pages de playlist privées
+[[headers]]
+  for = "/playlist.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

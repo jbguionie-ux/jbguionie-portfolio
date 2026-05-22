@@ -1,0 +1,10 @@
+---
+title: "Exemple — Sélection variée"
+slug: "exemple"
+message: "Voici une sélection d'exemple pour vous montrer comment ce système de playlists fonctionne."
+extracts:
+  - hyundai-tucson-nouvelle-generation
+  - bjorg-tout-commence-ici
+  - les-voyageurs-elio
+created_date: 2026-05-22T10:00:00
+---

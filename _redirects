@@ -1,0 +1,2 @@
+# Redirections pour les playlists privées
+/p/*    /playlist.html?slug=:splat    200
