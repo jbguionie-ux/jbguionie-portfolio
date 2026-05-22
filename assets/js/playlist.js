@@ -58,8 +58,11 @@ async function init() {
 }
 
 function getSlugFromUrl() {
-  // Format attendu : /p/slug (via redirection) → URL devient /playlist.html?slug=xxx
-  // ou directement /playlist.html?slug=xxx
+  // 1) D'abord essayer le chemin /p/[slug] (cas du rewrite Netlify)
+  const pathMatch = window.location.pathname.match(/^\/p\/([^\/\?]+)/);
+  if (pathMatch) return decodeURIComponent(pathMatch[1]);
+
+  // 2) Sinon essayer le query string ?slug=xxx (cas d'un accès direct)
   const params = new URLSearchParams(window.location.search);
   return params.get('slug') || params.get('p');
 }
