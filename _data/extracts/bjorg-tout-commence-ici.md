@@ -1,12 +1,12 @@
 ---
-title: "Bjorg — *« Tout commence ici »*"
-slug: "bjorg-tout-commence-ici"
-client: "Bjorg"
-support: "Spot Radio"
-year: "2025"
-type: "radio"
-secteur: "food"
-audio_file: ""
-duration: "0:25"
-order: 2
+title: Kinder — *« Noël est magique »*
+slug: kinder-noel
+client: Ferrero / Kinder
+support: Spot TV
+year: ""
+type: publicité
+secteur: food
+audio_file: /assets/media/jb-guionie-spot-tv-kinder-noel-2022.mp3
+duration: 0:30
+order: 1
 ---
