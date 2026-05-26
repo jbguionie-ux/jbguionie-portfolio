@@ -1,12 +1,12 @@
 ---
-title: "Module formation — *cybersécurité*"
-slug: "bnp-formation-cybersecurite"
-client: "BNP Paribas"
-support: "E-learning"
-year: "2025"
-type: "instit"
-secteur: "tech"
-audio_file: ""
-duration: "1:45"
+title: Samsung - *"Smart Things"*
+slug: samsung-smart-things
+client: "Samsung "
+support: Spot TV
+year: ""
+type: publicité
+secteur: tech
+audio_file: /assets/media/jean-baptiste-guionie-tvc-samsung-smart-things-2025.mp3
+duration: 1:45
 order: 4
 ---
