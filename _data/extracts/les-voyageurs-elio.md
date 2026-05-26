@@ -1,12 +1,12 @@
 ---
-title: "Les Voyageurs — *personnage Élio*"
-slug: "les-voyageurs-elio"
-client: "Disney+"
-support: "Animation"
-year: "2025"
-type: "doublage"
-secteur: "cartoon"
-audio_file: ""
-duration: "0:48"
+title: "*Les Iles de la Guadeloupe*"
+slug: " les-Iles-de-la-guadeloupe"
+client: " Les Iles de la Guadeloupe"
+support: Spot TV
+year: ""
+type: publicité
+secteur: lifestyle
+audio_file: /assets/media/jean-baptiste-guionie-les-iles-de-la-guadeloupe.mp3
+duration: 0:48
 order: 3
 ---
