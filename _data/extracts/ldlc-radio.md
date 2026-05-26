@@ -1,6 +1,6 @@
 ---
 title: "LDLC - Radio  "
-slug: LDLC-RADIO
+slug: ldlc-radio
 client: LDLC
 support: Spot Radio
 year: ""
