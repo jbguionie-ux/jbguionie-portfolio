@@ -1,14 +1,14 @@
 ---
-title: "Tucson — *« Nouvelle génération »*"
-slug: "hyundai-tucson-nouvelle-generation"
-client: "Hyundai"
-support: "Spot TV"
-year: "2026"
-type: "publicité"
-secteur: "car"
-audio_file: ""
-duration: "0:32"
+title: Samsung — *« Manifesto »*
+slug: samsung-manifesto
+client: Samsung
+support: Spot TV
+year: ""
+type: publicité
+secteur: tech
+audio_file: /assets/media/jean-baptiste-guionie_samsung-manifest.mp3
+duration: 0:32
+description: Spot 30s pour le lancement national. Ton calme, posé, intime.
 order: 1
 featured: true
-description: "Spot 30s pour le lancement national. Ton calme, posé, intime."
 ---
