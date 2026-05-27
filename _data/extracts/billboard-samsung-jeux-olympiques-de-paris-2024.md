@@ -1,5 +1,5 @@
 ---
-title: Billboard Samsung *"Jeux Olympiques de Paris 2024"*
+title: Billboard Samsung *Jeux Olympiques de Paris 2024*
 slug: bb-samsung-jo
 client: Samsung / JO 2024
 support: Billboard TV
