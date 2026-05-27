@@ -1,5 +1,6 @@
 /* ===================================================================
-   jbguionie.fr — JavaScript de la page playlist privée
+   jbguionie.fr — JavaScript de la page playlist privée (v2)
+   Nouveautés : timeline cliquable dans le player
    =================================================================== */
 
 const state = {
@@ -7,6 +8,7 @@ const state = {
   extracts: [],
   currentTrack: null,
   isPlaying: false,
+  isSeeking: false,
 };
 
 const audio = document.getElementById('audio-player');
@@ -15,7 +17,7 @@ async function init() {
   const slug = getSlugFromUrl();
   if (!slug) return showError('Lien invalide.');
 
-  document.getElementById('footer-slug').textContent = `jbguionie.fr/p/${slug}`;
+  document.getElementById('footer-slug').textContent = `jbguionie-voixoff.com/p/${slug}`;
 
   try {
     const [playlistsRes, extractsRes] = await Promise.all([
@@ -31,7 +33,6 @@ async function init() {
     const playlist = playlists.find(p => p.slug === slug);
     if (!playlist) return showError('Cette sélection est introuvable ou a été retirée.');
 
-    // Vérifier expiration
     if (playlist.expiry_date) {
       const expiry = new Date(playlist.expiry_date);
       if (expiry < new Date()) {
@@ -39,7 +40,6 @@ async function init() {
       }
     }
 
-    // Récupérer les extraits dans l'ordre choisi
     const extractSlugs = playlist.extracts || [];
     const orderedExtracts = extractSlugs
       .map(slug => allExtracts.find(e => e.slug === slug))
@@ -58,11 +58,9 @@ async function init() {
 }
 
 function getSlugFromUrl() {
-  // 1) D'abord essayer le chemin /p/[slug] (cas du rewrite Netlify)
   const pathMatch = window.location.pathname.match(/^\/p\/([^\/\?]+)/);
   if (pathMatch) return decodeURIComponent(pathMatch[1]);
 
-  // 2) Sinon essayer le query string ?slug=xxx (cas d'un accès direct)
   const params = new URLSearchParams(window.location.search);
   return params.get('slug') || params.get('p');
 }
@@ -141,7 +139,6 @@ function extractHTML(ex, num) {
 
 function renderFooterExpiry() {
   if (state.playlist.expiry_date) {
-    const d = new Date(state.playlist.expiry_date);
     document.getElementById('footer-expiry').textContent = `Expire le ${formatDateFR(state.playlist.expiry_date)}`;
   } else {
     document.getElementById('footer-expiry').textContent = '';
@@ -177,8 +174,62 @@ function setupPlayer() {
   });
 
   audio.addEventListener('timeupdate', () => {
+    if (state.isSeeking) return;
     document.getElementById('player-current').textContent = formatTime(audio.currentTime);
+    updateTimelineFill();
   });
+
+  setupTimeline();
+}
+
+function setupTimeline() {
+  const timeline = document.getElementById('player-timeline');
+  if (!timeline) return;
+
+  function seekToEvent(e) {
+    if (!audio.duration || isNaN(audio.duration)) return;
+    const rect = timeline.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const ratio = Math.max(0, Math.min(1, x / rect.width));
+    audio.currentTime = ratio * audio.duration;
+    updateTimelineFill();
+    document.getElementById('player-current').textContent = formatTime(audio.currentTime);
+  }
+
+  timeline.addEventListener('click', seekToEvent);
+
+  timeline.addEventListener('mousedown', (e) => {
+    state.isSeeking = true;
+    seekToEvent(e);
+    const onMove = (ev) => seekToEvent(ev);
+    const onUp = () => {
+      state.isSeeking = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  timeline.addEventListener('touchstart', (e) => {
+    state.isSeeking = true;
+    seekToEvent(e);
+  }, { passive: true });
+  timeline.addEventListener('touchmove', (e) => {
+    seekToEvent(e);
+  }, { passive: true });
+  timeline.addEventListener('touchend', () => {
+    state.isSeeking = false;
+  });
+}
+
+function updateTimelineFill() {
+  const fill = document.getElementById('player-timeline-fill');
+  const handle = document.getElementById('player-timeline-handle');
+  if (!fill || !audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  fill.style.width = pct + '%';
+  if (handle) handle.style.left = pct + '%';
 }
 
 function attachExtractListeners() {
@@ -197,6 +248,10 @@ function playTrack(url, title, client, id) {
   state.currentTrack = id;
   if (audio.src !== new URL(url, window.location.href).href) {
     audio.src = url;
+    const fill = document.getElementById('player-timeline-fill');
+    const handle = document.getElementById('player-timeline-handle');
+    if (fill) fill.style.width = '0%';
+    if (handle) handle.style.left = '0%';
   }
   document.getElementById('player-title').textContent = title.length > 45 ? title.slice(0, 45) + '…' : title;
   document.getElementById('player-client').textContent = ' · ' + client;
@@ -213,7 +268,6 @@ async function downloadAllAsZip() {
   btn.style.pointerEvents = 'none';
 
   try {
-    // Charger JSZip depuis CDN à la demande (pas chargé inutilement sinon)
     if (typeof JSZip === 'undefined') {
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
     }
@@ -261,7 +315,7 @@ function loadScript(src) {
   });
 }
 
-// ---- Helpers (partagés avec main.js mais inline ici) ----
+// ---- Helpers ----
 function generateWaveform(seedStr) {
   let seed = 0;
   for (let i = 0; i < seedStr.length; i++) seed += seedStr.charCodeAt(i);
