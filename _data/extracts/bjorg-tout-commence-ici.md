@@ -1,5 +1,5 @@
 ---
-title: Kinder — *« Noël est magique »*
+title: Kinder *Noël est magique*
 slug: kinder-noel
 client: Ferrero / Kinder
 support: Spot TV
