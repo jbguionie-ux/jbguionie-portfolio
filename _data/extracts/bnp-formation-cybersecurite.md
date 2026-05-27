@@ -7,6 +7,6 @@ year: ""
 type: publicité
 secteur: tech
 audio_file: /assets/media/jean-baptiste-guionie-tvc-samsung-smart-things-2025.mp3
-duration: 1:45
+duration: ""
 order: -1
 ---
