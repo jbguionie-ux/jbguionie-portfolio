@@ -1,5 +1,5 @@
 ---
-title: Billboard - *Bleu de Chanel*
+title: Billboard Chanel - *Bleu de Chanel*
 slug: bb-bleu-chanel
 client: Chanel / Bleu
 support: Billboard TV
