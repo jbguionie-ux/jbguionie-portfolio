@@ -1,14 +1,15 @@
 /* ===================================================================
-   jbguionie.fr — JavaScript principal
+   jbguionie.fr — JavaScript principal (v2)
+   Nouveautés : timeline cliquable + lightbox YouTube
    =================================================================== */
 
-// ---- État global ----
 const state = {
   extracts: [],
   films: [],
   filters: { type: 'tous', secteur: 'tous' },
   currentTrack: null,
   isPlaying: false,
+  isSeeking: false,
 };
 
 const audio = document.getElementById('audio-player');
@@ -18,6 +19,7 @@ async function init() {
   await Promise.all([loadExtracts(), loadFilms()]);
   setupFilters();
   setupPlayer();
+  setupLightbox();
 }
 
 // ---- Chargement des extraits ----
@@ -26,7 +28,6 @@ async function loadExtracts() {
     const response = await fetch('/assets/data/extracts.json');
     if (!response.ok) throw new Error('Fichier introuvable');
     let data = await response.json();
-    // Tri : ordre manuel si présent, sinon date descendante
     data.sort((a, b) => {
       if (a.order != null && b.order != null) return a.order - b.order;
       if (a.date && b.date) return new Date(b.date) - new Date(a.date);
@@ -127,6 +128,7 @@ function renderFilms() {
   }
 
   container.innerHTML = state.films.map(filmHTML).join('');
+  attachFilmListeners();
 }
 
 function filmHTML(film) {
@@ -134,12 +136,13 @@ function filmHTML(film) {
   const thumb = ytId
     ? `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`
     : (film.cover || '/assets/images/placeholder-film.jpg');
-  const url = film.youtube_url || '#';
+  const title = formatTitle(film.title);
+  const titlePlain = escapeHTML(film.title || '');
 
   return `
-    <a class="film" href="${url}" target="_blank" rel="noopener">
+    <a class="film" href="${film.youtube_url || '#'}" data-youtube-id="${ytId || ''}" data-title="${titlePlain}" data-client="${escapeHTML([film.client, film.year].filter(Boolean).join(' · '))}">
       <div class="film-thumb">
-        <img src="${thumb}" alt="${escapeHTML(film.title || '')}" loading="lazy">
+        <img src="${thumb}" alt="${titlePlain}" loading="lazy">
         <div class="film-overlay">
           ${film.duration ? `<span class="film-duration">${film.duration}</span>` : ''}
         </div>
@@ -147,10 +150,79 @@ function filmHTML(film) {
           <svg viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
         </div>
       </div>
-      <div class="film-title">${formatTitle(film.title)}</div>
+      <div class="film-title">${title}</div>
       <div class="film-client">${[film.client, film.year].filter(Boolean).join(' · ')}</div>
     </a>
   `;
+}
+
+// ---- Films : ouverture en lightbox au clic ----
+function attachFilmListeners() {
+  document.querySelectorAll('.film').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const ytId = el.dataset.youtubeId;
+      if (!ytId) return; // Pas d'ID YouTube → on laisse le lien fonctionner normalement
+      e.preventDefault();
+      openLightbox(ytId, el.dataset.title, el.dataset.client);
+    });
+  });
+}
+
+// ---- Lightbox vidéo ----
+function setupLightbox() {
+  const lightbox = document.getElementById('video-lightbox');
+  if (!lightbox) return;
+
+  // Fermeture au clic sur le fond
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Bouton de fermeture
+  const closeBtn = document.getElementById('lightbox-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+
+  // Fermeture avec touche Échap
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+function openLightbox(ytId, title, client) {
+  const lightbox = document.getElementById('video-lightbox');
+  const frame = document.getElementById('lightbox-frame');
+  const caption = document.getElementById('lightbox-caption');
+
+  if (!lightbox || !frame) return;
+
+  // On met en pause l'audio si un extrait jouait
+  if (audio && !audio.paused) audio.pause();
+
+  // URL YouTube en mode embed avec autoplay
+  frame.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`;
+
+  if (caption) {
+    caption.innerHTML = `${title || ''}${client ? ' <em>— ' + client + '</em>' : ''}`;
+  }
+
+  lightbox.classList.add('active');
+  document.body.classList.add('lightbox-open');
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('video-lightbox');
+  const frame = document.getElementById('lightbox-frame');
+  if (!lightbox) return;
+
+  lightbox.classList.remove('active');
+  document.body.classList.remove('lightbox-open');
+
+  // Vide l'iframe pour arrêter la vidéo
+  setTimeout(() => {
+    if (frame) frame.src = '';
+  }, 350);
 }
 
 // ---- Filtres ----
@@ -180,11 +252,7 @@ function setupPlayer() {
   const playIcon = document.getElementById('player-play-icon');
 
   playBtn.addEventListener('click', () => {
-    if (audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
+    if (audio.paused) audio.play(); else audio.pause();
   });
 
   audio.addEventListener('play', () => {
@@ -210,8 +278,66 @@ function setupPlayer() {
   });
 
   audio.addEventListener('timeupdate', () => {
+    if (state.isSeeking) return;
     document.getElementById('player-current').textContent = formatTime(audio.currentTime);
+    updateTimelineFill();
   });
+
+  // ---- Timeline cliquable ----
+  setupTimeline();
+}
+
+function setupTimeline() {
+  const timeline = document.getElementById('player-timeline');
+  if (!timeline) return;
+
+  function seekToEvent(e) {
+    if (!audio.duration || isNaN(audio.duration)) return;
+    const rect = timeline.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const ratio = Math.max(0, Math.min(1, x / rect.width));
+    audio.currentTime = ratio * audio.duration;
+    updateTimelineFill();
+    document.getElementById('player-current').textContent = formatTime(audio.currentTime);
+  }
+
+  // Clic simple
+  timeline.addEventListener('click', seekToEvent);
+
+  // Glisser-déposer (souris)
+  timeline.addEventListener('mousedown', (e) => {
+    state.isSeeking = true;
+    seekToEvent(e);
+    const onMove = (ev) => seekToEvent(ev);
+    const onUp = () => {
+      state.isSeeking = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Glisser-déposer (tactile)
+  timeline.addEventListener('touchstart', (e) => {
+    state.isSeeking = true;
+    seekToEvent(e);
+  }, { passive: true });
+  timeline.addEventListener('touchmove', (e) => {
+    seekToEvent(e);
+  }, { passive: true });
+  timeline.addEventListener('touchend', () => {
+    state.isSeeking = false;
+  });
+}
+
+function updateTimelineFill() {
+  const fill = document.getElementById('player-timeline-fill');
+  const handle = document.getElementById('player-timeline-handle');
+  if (!fill || !audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  fill.style.width = pct + '%';
+  if (handle) handle.style.left = pct + '%';
 }
 
 function attachExtractListeners() {
@@ -233,6 +359,11 @@ function playTrack(url, title, client, id) {
   state.currentTrack = id;
   if (audio.src !== new URL(url, window.location.href).href) {
     audio.src = url;
+    // Reset visuel timeline pour la nouvelle piste
+    const fill = document.getElementById('player-timeline-fill');
+    const handle = document.getElementById('player-timeline-handle');
+    if (fill) fill.style.width = '0%';
+    if (handle) handle.style.left = '0%';
   }
   document.getElementById('player-title').textContent = title.length > 45 ? title.slice(0, 45) + '…' : title;
   document.getElementById('player-client').textContent = ' · ' + client;
@@ -271,7 +402,6 @@ function labelize(slug) {
 
 function formatTitle(title) {
   if (!title) return '';
-  // Permet l'italique dans les titres via la syntaxe *italique* ou — texte italique
   return escapeHTML(title)
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/—\s*(«[^»]+»)/g, '— <em>$1</em>');
@@ -296,6 +426,7 @@ function getYouTubeId(url) {
     /youtube\.com\/watch\?v=([^&]+)/,
     /youtu\.be\/([^?]+)/,
     /youtube\.com\/embed\/([^?]+)/,
+    /youtube\.com\/shorts\/([^?]+)/,
   ];
   for (const p of patterns) {
     const m = url.match(p);
@@ -304,5 +435,4 @@ function getYouTubeId(url) {
   return null;
 }
 
-// ---- GO ----
 init();
