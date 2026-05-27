@@ -1,9 +1,9 @@
 ---
-title: "Tucson — *« Nouvelle génération »*"
-slug: "hyundai-tucson-film"
-youtube_url: ""
-client: "Hyundai"
-year: "2026"
-duration: "0:32"
+title: Candy *Multiwash*
+slug: candy-multiwash
+youtube_url: https://youtu.be/_G0QDLxK3jA?si=LHhnoVcnUZqdrXP2
+client: Candy
+year: ""
+duration: ""
 order: 1
 ---
