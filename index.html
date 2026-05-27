@@ -28,14 +28,12 @@
 
 <div class="container">
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-eyebrow">Comédien voix off — Paris</div>
     <h1>Jean-Baptiste <em>Guionie.</em></h1>
     <p class="hero-credit">Publicité, animation, institutionnelle, doublage.</p>
   </section>
 
-  <!-- FILTRES -->
   <section class="filter-section" id="extraits">
 
     <div class="filter-row">
@@ -63,24 +61,20 @@
 
   </section>
 
-  <!-- EXTRAITS — rempli dynamiquement par main.js -->
   <section class="extracts" id="extracts-list">
     <div class="loading">Chargement des extraits…</div>
   </section>
 
-  <!-- FILMS -->
   <section class="section" id="films">
     <div class="section-head">
       <h2 class="section-title">Films.</h2>
     </div>
 
-    <!-- FILMS — rempli dynamiquement par main.js -->
     <div class="films-grid" id="films-list">
       <div class="loading">Chargement des films…</div>
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section class="contact-section" id="contact">
     <div class="contact-head">
       <div class="contact-eyebrow">Contact</div>
@@ -129,40 +123,45 @@
 
 </div>
 
-<!-- Lecteur audio persistant -->
+<!-- Lecteur audio persistant — AVEC TIMELINE -->
 <div class="player" id="player">
-  <button class="player-play" id="player-play-btn">
-    <svg id="player-play-icon" viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
-  </button>
-  <div class="player-info">
-    <strong id="player-title">—</strong><span id="player-client">—</span>
+  <div class="player-top">
+    <button class="player-play" id="player-play-btn">
+      <svg id="player-play-icon" viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
+    </button>
+    <div class="player-info">
+      <strong id="player-title">—</strong><span id="player-client">—</span>
+    </div>
+    <div class="player-time">
+      <span id="player-current">0:00</span> / <span id="player-duration">0:00</span>
+    </div>
+    <div class="player-actions">
+      <a class="player-btn" id="player-download" title="Télécharger MP3" download>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M8 11l-3.5-3.5M8 11l3.5-3.5M2.5 13.5h11"/></svg>
+      </a>
+    </div>
   </div>
-  <div class="player-time">
-    <span id="player-current">0:00</span> / <span id="player-duration">0:00</span>
+  <div class="player-timeline" id="player-timeline">
+    <div class="player-timeline-track">
+      <div class="player-timeline-fill" id="player-timeline-fill"></div>
+      <div class="player-timeline-handle" id="player-timeline-handle"></div>
+    </div>
   </div>
-  <div class="player-actions">
-    <a class="player-btn" id="player-download" title="Télécharger MP3" download>
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M8 11l-3.5-3.5M8 11l3.5-3.5M2.5 13.5h11"/></svg>
-    </a>
+</div>
+
+<!-- Lightbox vidéo YouTube -->
+<div class="video-lightbox" id="video-lightbox">
+  <div class="video-lightbox-inner">
+    <button class="video-lightbox-close" id="lightbox-close" aria-label="Fermer">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+    <iframe class="video-lightbox-frame" id="lightbox-frame" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+    <div class="video-lightbox-caption" id="lightbox-caption"></div>
   </div>
 </div>
 
 <audio id="audio-player" preload="metadata"></audio>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/";
-        });
-      }
-    });
-  }
-</script>
-
-<script src="/assets/js/main.js"></script>
 <script src="/assets/js/main.js"></script>
 
 </body>
