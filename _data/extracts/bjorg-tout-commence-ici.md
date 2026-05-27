@@ -7,6 +7,6 @@ year: ""
 type: publicité
 secteur: food
 audio_file: /assets/media/jb-guionie-spot-tv-kinder-noel-2022.mp3
-duration: 0:30
+duration: ""
 order: 1
 ---
