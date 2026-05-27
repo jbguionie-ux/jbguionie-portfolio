@@ -22,16 +22,13 @@
 
 <div class="container">
 
-  <!-- HERO PLAYLIST — rempli dynamiquement -->
   <section class="playlist-hero" id="playlist-hero">
     <div class="loading">Chargement de la sélection…</div>
   </section>
 
-  <!-- EXTRAITS — rempli dynamiquement -->
   <section class="extracts" id="extracts-list">
   </section>
 
-  <!-- SIGNATURE -->
   <section class="signature">
     <p class="signature-text">Cette sélection a été préparée spécifiquement pour vous. <br>N'hésitez pas à me contacter pour toute question ou demande complémentaire.</p>
     <div class="signature-contact">
@@ -48,21 +45,29 @@
 
 </div>
 
-<!-- Lecteur -->
+<!-- Lecteur audio persistant — AVEC TIMELINE -->
 <div class="player" id="player">
-  <button class="player-play" id="player-play-btn">
-    <svg id="player-play-icon" viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
-  </button>
-  <div class="player-info">
-    <strong id="player-title">—</strong><span id="player-client">—</span>
+  <div class="player-top">
+    <button class="player-play" id="player-play-btn">
+      <svg id="player-play-icon" viewBox="0 0 10 12" fill="currentColor"><polygon points="0,0 10,6 0,12"/></svg>
+    </button>
+    <div class="player-info">
+      <strong id="player-title">—</strong><span id="player-client">—</span>
+    </div>
+    <div class="player-time">
+      <span id="player-current">0:00</span> / <span id="player-duration">0:00</span>
+    </div>
+    <div class="player-actions">
+      <a class="player-btn" id="player-download" title="Télécharger MP3" download>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M8 11l-3.5-3.5M8 11l3.5-3.5M2.5 13.5h11"/></svg>
+      </a>
+    </div>
   </div>
-  <div class="player-time">
-    <span id="player-current">0:00</span> / <span id="player-duration">0:00</span>
-  </div>
-  <div class="player-actions">
-    <a class="player-btn" id="player-download" title="Télécharger MP3" download>
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9M8 11l-3.5-3.5M8 11l3.5-3.5M2.5 13.5h11"/></svg>
-    </a>
+  <div class="player-timeline" id="player-timeline">
+    <div class="player-timeline-track">
+      <div class="player-timeline-fill" id="player-timeline-fill"></div>
+      <div class="player-timeline-handle" id="player-timeline-handle"></div>
+    </div>
   </div>
 </div>
 
