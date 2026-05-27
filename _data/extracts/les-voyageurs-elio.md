@@ -7,6 +7,6 @@ year: ""
 type: publicité
 secteur: lifestyle
 audio_file: /assets/media/jean-baptiste-guionie-les-iles-de-la-guadeloupe.mp3
-duration: 0:48
+duration: ""
 order: 8
 ---
