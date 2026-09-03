@@ -665,6 +665,26 @@ body.lightbox-open {
 }
 .contact-line a:hover { color: var(--accent); }
 
+/* Carte « Contact direct » en pleine largeur, au-dessus des cartes agents */
+.contact-card--wide { grid-column: 1 / -1; }
+.contact-card--wide .contact-lines {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 28px;
+}
+.contact-card--wide .contact-line {
+  border-top: 1px solid var(--line-soft);
+  margin-top: 0;
+}
+
+/* Encart « Agents » : les deux agences côte à côte, à égalité */
+.contact-agents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 28px;
+}
+.contact-agents .contact-name { margin-bottom: 14px; }
+
 /* Footer */
 .footer-bottom {
   padding: 32px 0;
@@ -825,6 +845,8 @@ body.lightbox-open {
   .extract-play { width: 40px; height: 40px; }
   .films-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
+  .contact-card--wide .contact-lines { grid-template-columns: 1fr; }
+  .contact-agents { grid-template-columns: 1fr; gap: 28px 0; }
   nav ul { gap: 14px; }
   nav a { font-size: 11.5px; }
   .filter-label { display: none; }
