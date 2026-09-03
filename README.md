@@ -1,4 +1,4 @@
-# jbguionie.fr — Portfolio voix off
+# jbguionie-voixoff.com — Portfolio voix off
 
 Site portfolio personnel — Jean-Baptiste Guionie, comédien voix off.
 
@@ -11,13 +11,51 @@ Site portfolio personnel — Jean-Baptiste Guionie, comédien voix off.
 - Hébergement : **Netlify** (gratuit)
 - Code : **GitHub** (gratuit)
 - Back-office : **Decap CMS** sur `/admin` (gratuit)
-- Domaine : **jbguionie.fr** (~12€/an)
+- Domaine : **jbguionie-voixoff.com** (~12€/an, chez OVH)
 
 **Coût total : ~12€/an** (juste le nom de domaine).
 
 ---
 
-## 🚀 Mise en ligne — première installation
+## ✅ État actuel (mis à jour septembre 2026)
+
+Le site est **en ligne et opérationnel**. L'installation décrite plus bas a déjà été faite —
+elle n'est conservée que comme documentation de référence.
+
+| | |
+|---|---|
+| Domaine principal | **jbguionie-voixoff.com** (registrar : OVH) |
+| Domaine secondaire | jbguionie-voixoff.net |
+| Hébergement des fichiers | **Netlify**, alimenté par ce dépôt GitHub |
+| Back-office | Decap CMS sur `/admin` |
+
+> ⚠️ **Il n'y a aucun hébergement web chez OVH.** Le compte OVH ne contient que les
+> noms de domaine et les emails. La zone DNS de `jbguionie-voixoff.com` pointe vers
+> Netlify (enregistrement A `75.2.60.5`). Déposer des fichiers chez OVH ne changerait
+> donc rien à ce qui s'affiche sur le site.
+
+---
+
+## 🔄 Mettre à jour le site
+
+**Pour ajouter ou modifier un extrait, un film ou une playlist** → passer par le
+back-office `/admin` (voir « Utilisation quotidienne » plus bas). Rien à toucher dans le code.
+
+**Pour modifier le code du site** (mise en page, textes fixes, styles) → il suffit de
+déposer les fichiers modifiés dans ce dépôt GitHub :
+
+1. Ouvrir le dépôt : https://github.com/jbguionie-ux/jbguionie-portfolio
+2. **Add file → Upload files** (en se plaçant d'abord dans le bon dossier :
+   `index.html` est à la racine, `style.css` dans `assets/css/`).
+3. Glisser le fichier, écrire un message de commit, **Commit changes** sur `main`.
+4. Netlify redéploie automatiquement : le site est à jour en **1 à 2 minutes**.
+
+Tout est versionné : en cas d'erreur, on peut revenir à n'importe quelle version
+précédente depuis l'historique GitHub.
+
+---
+
+## 🚀 Mise en ligne — première installation *(déjà réalisée — pour mémoire)*
 
 ### Étape 1 — Créer un compte GitHub
 1. Aller sur https://github.com et cliquer sur **Sign up**.
@@ -67,9 +105,9 @@ Site portfolio personnel — Jean-Baptiste Guionie, comédien voix off.
 6. Un email arrive. Cliquer le lien et créer un mot de passe.
 
 ### Étape 7 — Connecter le nom de domaine
-1. Acheter **jbguionie.fr** sur OVH, Gandi ou Namecheap (~12€/an).
+1. Acheter le domaine sur OVH, Gandi ou Namecheap (~12€/an). *(Fait : jbguionie-voixoff.com chez OVH.)*
 2. Sur Netlify, aller dans **Domain management → Add a domain**.
-3. Entrer `jbguionie.fr`.
+3. Entrer `jbguionie-voixoff.com`.
 4. Netlify donne les enregistrements DNS à configurer chez le registrar.
 5. Chez le registrar (OVH, Gandi…), configurer les **nameservers** ou les enregistrements **A/CNAME** indiqués par Netlify.
 6. Patienter de 1h à 24h pour la propagation DNS.
@@ -83,7 +121,7 @@ Site portfolio personnel — Jean-Baptiste Guionie, comédien voix off.
 
 ### Ajouter un extrait audio
 
-1. Aller sur **https://jbguionie.fr/admin**.
+1. Aller sur **https://jbguionie-voixoff.com/admin**.
 2. Se connecter avec son email + mot de passe Netlify Identity.
 3. Dans la barre latérale, cliquer **Extraits audio**.
 4. Cliquer **New Extrait**.
@@ -116,12 +154,12 @@ Site portfolio personnel — Jean-Baptiste Guionie, comédien voix off.
 1. Dans le back-office, cliquer **Playlists privées → New Playlist**.
 2. Remplir :
    - **Titre** : ex. "Casting Renault — Voix père de famille"
-   - **Slug** : ex. `casting-renault-mars` (ce sera l'URL : **jbguionie.fr/p/casting-renault-mars**)
+   - **Slug** : ex. `casting-renault-mars` (ce sera l'URL : **jbguionie-voixoff.com/p/casting-renault-mars**)
    - **Message d'accueil** : court message personnalisé pour le destinataire.
    - **Extraits inclus** : sélectionner les extraits dans la liste, dans l'ordre voulu.
    - **Date d'expiration** (optionnel) : si vous voulez que le lien expire automatiquement.
 3. **Publish**.
-4. **Copier l'URL** `https://jbguionie.fr/p/votre-slug` et l'envoyer par mail au destinataire.
+4. **Copier l'URL** `https://jbguionie-voixoff.com/p/votre-slug` et l'envoyer par mail au destinataire.
 
 ---
 
